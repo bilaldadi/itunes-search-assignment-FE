@@ -114,8 +114,8 @@ export default function ResultsContainer({
       <div className="w-full overflow-x-auto pb-4">
         <div className="flex gap-4 px-4" style={{ scrollSnapType: 'x mandatory' }}>
           {podcasts.map((podcast) => (
-            <div style={{ scrollSnapAlign: 'start' }}>
-              <PodcastCard key={podcast.trackId} podcast={podcast} viewMode={viewMode} />
+            <div key={podcast.trackId} style={{ scrollSnapAlign: 'start' }}>
+              <PodcastCard podcast={podcast} viewMode={viewMode} />
             </div>
           ))}
         </div>
