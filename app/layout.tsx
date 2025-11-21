@@ -1,15 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const ibmArabic = localFont({
+  src: [
+    {
+      path: "../public/fonts/IBM-Plex-Sans-Arabic/IBMPlexSansArabic-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/IBM-Plex-Sans-Arabic/IBMPlexSansArabic-Bold.otf",
+      weight: "700",
+      style: "bold",
+    },
+    {
+      path: "../public/fonts/IBM-Plex-Sans-Arabic/IBMPlexSansArabic-Medium.otf",
+      weight: "500",
+      style: "medium",
+    },
+  ],
+  variable: "--font-ibm-arabic",
 });
 
 export const metadata: Metadata = {
@@ -23,9 +34,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ar">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${ibmArabic.variable}`}
       >
         {children}
       </body>
