@@ -43,12 +43,12 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
       {/* 3-dot Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+        className="h-10 w-10 rounded-full border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center"
         aria-label="View options"
         aria-expanded={isOpen}
       >
         <svg
-          className="w-6 h-6"
+          className="w-5 h-5"
           fill="currentColor"
           viewBox="0 0 24 24"
           aria-hidden="true"
@@ -61,15 +61,15 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+        <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#11182b] border border-white/10 py-1 z-50 shadow-xl">
           {viewOptions.map((option) => (
             <button
               key={option.value}
               onClick={() => handleViewChange(option.value)}
               className={`w-full text-left px-4 py-2 text-sm transition-colors ${
                 currentView === option.value
-                  ? 'bg-blue-50 text-blue-700'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-white/10 text-white'
+                  : 'text-white/70 hover:bg-white/5'
               }`}
               dir={locale === 'ar' ? 'rtl' : 'ltr'}
             >

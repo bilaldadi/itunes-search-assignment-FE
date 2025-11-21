@@ -7,9 +7,10 @@ import { debounce } from '@/lib/debounce';
 interface SearchBarProps {
   onSearch: (query: string) => void;
   isLoading?: boolean;
+  variant?: 'standalone' | 'condensed';
 }
 
-export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
+export default function SearchBar({ onSearch, isLoading, variant = 'standalone' }: SearchBarProps) {
   const t = useTranslations('search');
   const locale = useLocale();
   const [query, setQuery] = useState('');
@@ -28,13 +29,21 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
     onSearch('');
   };
 
+  const isCondensed = variant === 'condensed';
+  const iconPositionClass = locale === 'ar' ? 'right-0 pr-5' : 'left-0 pl-5';
+  const clearPositionClass = locale === 'ar' ? 'left-0 pl-5' : 'right-0 pr-5';
+  const paddingClass = locale === 'ar' ? 'pr-14 pl-16' : 'pl-14 pr-16';
+  const inputVerticalPadding = isCondensed ? 'py-3.5' : 'py-4';
+
+  const containerClass = isCondensed ? 'w-full' : 'w-full max-w-4xl mx-auto px-6 py-8';
+
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 py-6">
-      <div className="relative">
+    <div className={containerClass}>
+      <div className="relative w-full">
         {/* Search Icon */}
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <div className={`absolute inset-y-0 flex items-center pointer-events-none text-white/50 ${iconPositionClass}`}>
           <svg
-            className="h-5 w-5 text-gray-400"
+            className="h-5 w-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -55,18 +64,18 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t('placeholder')}
-          className="w-full pl-12 pr-12 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          className={`w-full ${paddingClass} ${inputVerticalPadding} text-base sm:text-lg rounded-2xl bg-[#111a2e] border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#7d5bff] focus:border-transparent transition-all shadow-[0_8px_30px_rgba(0,0,0,0.35)]`}
           dir={locale === 'ar' ? 'rtl' : 'ltr'}
         />
 
         {/* Clear Button & Loading Indicator */}
-        <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+        <div className={`absolute inset-y-0 flex items-center ${clearPositionClass}`}>
           {isLoading ? (
-            <div className="animate-spin h-5 w-5 border-2 border-gray-300 border-t-blue-500 rounded-full" />
+            <div className="animate-spin h-5 w-5 border-2 border-white/30 border-t-[#7d5bff] rounded-full" />
           ) : query ? (
             <button
               onClick={handleClear}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-white/40 hover:text-white/80 transition-colors"
               aria-label={t('clear')}
             >
               <svg

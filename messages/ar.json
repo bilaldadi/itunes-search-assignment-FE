@@ -6,7 +6,15 @@
     "noResults": "لا توجد نتائج",
     "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "initialState": "ابدأ البحث عن البودكاست المفضل لديك",
-    "resultsCount": "{count, plural, =0 {لا توجد نتائج} =1 {نتيجة واحدة} other {# نتيجة}}"
+    "resultsCount": "{count, plural, =0 {لا توجد نتائج} =1 {نتيجة واحدة} other {# نتيجة}}",
+    "topPodcasts": "أفضل البودكاست",
+    "topPodcastsFor": "أفضل البودكاست لـ {term}",
+    "topEpisodes": "أفضل الحلقات",
+    "topEpisodesFor": "أفضل الحلقات لـ {term}",
+    "trendingNow": "الأكثر رواجًا الآن",
+    "freshEpisodes": "أحدث الحلقات المختارة لك",
+    "searchTermLabel": "نتائج عن \"{term}\"",
+    "listenNow": "استمع الآن"
   },
   "layout": {
     "switchToGrid": "التبديل إلى عرض الشبكة",
@@ -18,6 +26,19 @@
     "appTitle": "بحث البودكاست",
     "showMore": "عرض المزيد",
     "showLess": "عرض أقل"
+  },
+  "sidebar": {
+    "home": "الرئيسية",
+    "discover": "اكتشف",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "myQueue": "القائمة الخاصة بي",
+    "myPodcasts": "البودكاستات الخاصة بي",
+    "recents": "الأحدث",
+    "appTitle": "بحث البودكاست",
+    "language": "اللغة",
+    "version": "بودباي v2.9.6",
+    "fancySoups": "Fancy Soups"
   }
 }
 

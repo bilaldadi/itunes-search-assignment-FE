@@ -6,7 +6,15 @@
     "noResults": "No results found",
     "error": "Something went wrong. Please try again.",
     "initialState": "Start searching for your favorite podcasts",
-    "resultsCount": "{count, plural, =0 {No results} =1 {1 result} other {# results}}"
+    "resultsCount": "{count, plural, =0 {No results} =1 {1 result} other {# results}}",
+    "topPodcasts": "Top podcasts",
+    "topPodcastsFor": "Top podcasts for {term}",
+    "topEpisodes": "Top episodes",
+    "topEpisodesFor": "Top episodes for {term}",
+    "trendingNow": "Trending right now",
+    "freshEpisodes": "Fresh episodes picked for you",
+    "searchTermLabel": "Results for \"{term}\"",
+    "listenNow": "Listen now"
   },
   "layout": {
     "switchToGrid": "Switch layout to Grid",
@@ -18,6 +26,19 @@
     "appTitle": "Podcast Search",
     "showMore": "Show more",
     "showLess": "Show less"
+  },
+  "sidebar": {
+    "home": "Home",
+    "discover": "Discover",
+    "settings": "Settings",
+    "logout": "Logout",
+    "myQueue": "My Queue",
+    "myPodcasts": "My Podcasts",
+    "recents": "Recents",
+    "appTitle": "Podcast Search",
+    "language": "Language",
+    "version": "Podbay v2.9.6",
+    "fancySoups": "Fancy Soups"
   }
 }
 

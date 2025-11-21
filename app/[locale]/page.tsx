@@ -7,20 +7,24 @@ import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import Header from '@/app/components/Header';
 import SearchBar from '@/app/components/SearchBar';
-import ViewToggle from '@/app/components/ViewToggle';
 import ResultsContainer from '@/app/components/ResultsContainer';
+import Sidebar from '@/app/components/Sidebar';
 
 export default function Home() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [topPodcastsView, setTopPodcastsView] = useState<ViewMode>('scroll');
+  const [topEpisodesView, setTopEpisodesView] = useState<ViewMode>('list');
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = async (query: string) => {
+    setSearchTerm(query);
+
     if (!query.trim()) {
       setPodcasts([]);
       setHasSearched(false);
@@ -48,43 +52,35 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header 
-        currentLocale={locale as 'en' | 'ar'} 
-        onLanguageChange={handleLanguageChange} 
-      />
+    <div className="min-h-screen text-white">
+      <div className="flex min-h-screen">
+        <Sidebar currentLocale={locale as 'en' | 'ar'} onLanguageChange={handleLanguageChange} />
 
-      {/* Main Content */}
-      <main className="pb-12">
-        {/* Search Bar */}
-        <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+        <div className="flex-1 flex flex-col">
+          <Header
+            currentLocale={locale as 'en' | 'ar'}
+            onLanguageChange={handleLanguageChange}
+          >
+            <SearchBar onSearch={handleSearch} isLoading={isLoading} variant="condensed" />
+          </Header>
 
-        {/* View Toggle and Results Count */}
-        {(hasSearched || podcasts.length > 0) && (
-          <div className="max-w-7xl mx-auto px-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-600" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-                {podcasts.length > 0 && (
-                  <span>
-                    {podcasts.length} {locale === 'ar' ? 'نتيجة' : podcasts.length === 1 ? 'result' : 'results'}
-                  </span>
-                )}
-              </div>
-              <ViewToggle currentView={viewMode} onViewChange={setViewMode} />
+          <main className="flex-1 overflow-y-auto">
+            <div className="w-full">
+              <ResultsContainer
+                podcasts={podcasts}
+                topPodcastsView={topPodcastsView}
+                onTopPodcastsViewChange={setTopPodcastsView}
+                topEpisodesView={topEpisodesView}
+                onTopEpisodesViewChange={setTopEpisodesView}
+                isLoading={isLoading}
+                hasSearched={hasSearched}
+                error={error}
+                searchTerm={searchTerm}
+              />
             </div>
-          </div>
-        )}
-
-        {/* Results */}
-        <ResultsContainer
-          podcasts={podcasts}
-          viewMode={viewMode}
-          isLoading={isLoading}
-          hasSearched={hasSearched}
-          error={error}
-        />
-      </main>
+          </main>
+        </div>
+      </div>
     </div>
   );
 }
