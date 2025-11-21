@@ -1,0 +1,23 @@
+{
+  "search": {
+    "placeholder": "ابحث عن البودكاست...",
+    "clear": "مسح البحث",
+    "loading": "جاري التحميل...",
+    "noResults": "لا توجد نتائج",
+    "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "initialState": "ابدأ البحث عن البودكاست المفضل لديك",
+    "resultsCount": "{count, plural, =0 {لا توجد نتائج} =1 {نتيجة واحدة} other {# نتيجة}}"
+  },
+  "layout": {
+    "switchToGrid": "التبديل إلى عرض الشبكة",
+    "switchToList": "التبديل إلى عرض القائمة",
+    "switchToScroll": "التبديل إلى عرض التمرير"
+  },
+  "common": {
+    "language": "اللغة",
+    "appTitle": "بحث البودكاست",
+    "showMore": "عرض المزيد",
+    "showLess": "عرض أقل"
+  }
+}
+
