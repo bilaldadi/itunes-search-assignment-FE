@@ -91,7 +91,7 @@ export default function Sidebar({ currentLocale, onLanguageChange }: SidebarProp
   );
 
   return (
-    <aside className="hidden xl:flex w-55 flex-shrink-0 flex-col bg-[#141524] border-r border-white/5 sticky top-0 h-screen">
+    <aside className="hidden md:flex w-55 flex-shrink-0 flex-col bg-[#141524] border-r border-white/5 sticky top-0 h-screen">
       <div className="p-6">
         <Image src="/logo.svg" alt="logo" width={45} height={49} />
       </div>

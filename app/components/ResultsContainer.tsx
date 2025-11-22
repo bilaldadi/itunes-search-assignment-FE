@@ -188,12 +188,12 @@ export default function ResultsContainer({
     return (
       <div
         key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-tile-${index}`}
-        className="w-90 bg-white/5 border border-white/5 flex flex-col rounded-md hover:border-white/10 transition-colors"
+        className="w-full bg-white/5 border border-white/5 flex flex-col rounded-md hover:border-white/10 transition-colors"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex items-start bg-gradient-to-r from-[#211627] to-[#1a1a26] rounded-md">
-          <div className="w-30 h-30">
-           <Image className="rounded-md w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={100} height={100} />
+          <div className="w-30 h-30 flex-shrink-0">
+           <Image className="rounded-md w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={600} height={600} />
           </div>
 
           <div className="flex-1 min-w-0 p-3">
@@ -226,7 +226,7 @@ export default function ResultsContainer({
 
     if (topEpisodesView === 'grid') {
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 place-items-center">
+        <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-4">
           {topEpisodes.map((podcast, index) => renderEpisodeTile(podcast, index))}
         </div>
       );
@@ -237,7 +237,7 @@ export default function ResultsContainer({
         {topEpisodes.map((podcast, index) => (
           <div
             key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-scroll-${index}`}
-            className="flex-shrink-0"
+            className="flex-shrink-0 w-80"
           >
             {renderEpisodeTile(podcast, index)}
           </div>
