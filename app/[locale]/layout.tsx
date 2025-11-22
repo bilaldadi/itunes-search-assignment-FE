@@ -31,6 +31,9 @@ const ibmArabic = localFont({
 export const metadata: Metadata = {
   title: "Podbay - Podcast Search",
   description: "Search and discover your favorite podcasts",
+  icons: {
+    icon: '/logo.svg',
+  },
 };
 
 export default async function LocaleLayout({

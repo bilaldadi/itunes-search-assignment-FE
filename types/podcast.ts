@@ -11,12 +11,14 @@ export interface Podcast {
   trackViewUrl?: string;
   feedUrl?: string;
   releaseDate?: string;
+  trackTimeMillis?: number;
   primaryGenreName?: string;
   genres?: string[];
   trackCount?: number;
   country?: string;
   contentAdvisoryRating?: string;
   description?: string;
+  longDescription?: string;
 }
 
 export interface ApiResponse {

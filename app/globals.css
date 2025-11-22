@@ -24,24 +24,24 @@ body {
   font-family: var(--font-ibm-arabic), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Idle (not scrolling) */
+
 .custom-scroll::-webkit-scrollbar {
-  height: 1.5px; /* thin */
+  height: 1.5px;
 }
 
 .custom-scroll::-webkit-scrollbar-track {
-  background: #242533; /* visible background */
+  background: #242533; 
   border-radius: 9999px;
 }
 
 .custom-scroll::-webkit-scrollbar-thumb {
-  background: #404080;  /* your fixed color */
+  background: #404080; 
   border-radius: 9999px;
 }
 
 /* When hovering the scroll container (scrolling) */
 .custom-scroll:hover::-webkit-scrollbar {
-  height: 8px; /* thicker */
+  height: 1.5px; /* thicker */
 }
 
 /* Track stays the SAME color */
@@ -53,5 +53,4 @@ body {
 .custom-scroll:hover::-webkit-scrollbar-thumb {
   background: #404080;
 }
-
 

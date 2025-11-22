@@ -10,12 +10,13 @@ import SearchBar from '@/app/components/SearchBar';
 import ResultsContainer from '@/app/components/ResultsContainer';
 import Sidebar from '@/app/components/Sidebar';
 
+
 export default function Home() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [topPodcastsView, setTopPodcastsView] = useState<ViewMode>('scroll');
-  const [topEpisodesView, setTopEpisodesView] = useState<ViewMode>('list');
+  const [topEpisodesView, setTopEpisodesView] = useState<ViewMode>('grid');
   const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
