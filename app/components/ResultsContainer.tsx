@@ -162,7 +162,7 @@ export default function ResultsContainer({
     }
 
     return (
-      <div className="flex gap-4 overflow-x-auto pb-4" dir={isRTL ? 'rtl' : 'ltr'} style={{ scrollSnapType: 'x proximity' }}>
+      <div className="flex gap-4 overflow-x-auto pb-4 custom-scroll" dir={isRTL ? 'rtl' : 'ltr'} style={{ scrollSnapType: 'x proximity' }}>
         {topPodcasts.map((podcast, index) => (
           <div
             key={`${podcast.trackId ?? podcast.collectionName ?? 'podcast'}-scroll-${index}`}
@@ -265,7 +265,7 @@ export default function ResultsContainer({
     }
 
     return (
-      <div className="flex gap-4 overflow-x-auto pb-4" dir={isRTL ? 'rtl' : 'ltr'} style={{ scrollSnapType: 'x proximity' }}>
+      <div className="flex gap-4 overflow-x-auto pb-4 custom-scroll" dir={isRTL ? 'rtl' : 'ltr'} style={{ scrollSnapType: 'x proximity' }}>
         {topEpisodes.map((podcast, index) => (
           <div
             key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-scroll-${index}`}

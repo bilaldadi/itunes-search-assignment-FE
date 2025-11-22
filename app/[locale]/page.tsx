@@ -56,7 +56,7 @@ export default function Home() {
       <div className="flex min-h-screen">
         <Sidebar currentLocale={locale as 'en' | 'ar'} onLanguageChange={handleLanguageChange} />
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <Header
             currentLocale={locale as 'en' | 'ar'}
             onLanguageChange={handleLanguageChange}

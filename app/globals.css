@@ -23,3 +23,35 @@ body {
   color: var(--foreground);
   font-family: var(--font-ibm-arabic), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
+
+/* Idle (not scrolling) */
+.custom-scroll::-webkit-scrollbar {
+  height: 1.5px; /* thin */
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #242533; /* visible background */
+  border-radius: 9999px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #404080;  /* your fixed color */
+  border-radius: 9999px;
+}
+
+/* When hovering the scroll container (scrolling) */
+.custom-scroll:hover::-webkit-scrollbar {
+  height: 8px; /* thicker */
+}
+
+/* Track stays the SAME color */
+.custom-scroll:hover::-webkit-scrollbar-track {
+  background: #242533
+}
+
+/* Thumb stays SAME color */
+.custom-scroll:hover::-webkit-scrollbar-thumb {
+  background: #404080;
+}
+
+
