@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ViewMode } from '@/types/podcast';
 import { useTranslations, useLocale } from 'next-intl';
+import { EllipsisVerticalIcon } from 'lucide-react';
 
 interface ViewToggleProps {
   currentView: ViewMode;
@@ -13,19 +14,10 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
   const t = useTranslations('layout');
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+
 
   // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleViewChange = (view: ViewMode) => {
     onViewChange(view);
@@ -39,24 +31,15 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
   ];
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative">
       {/* 3-dot Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="h-10 w-10 rounded-full border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center"
+        className="h-10 w-10  text-white rounded-full hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center cursor-pointer"
         aria-label="View options"
         aria-expanded={isOpen}
       >
-        <svg
-          className="w-5 h-5"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="5" r="2" />
-          <circle cx="12" cy="12" r="2" />
-          <circle cx="12" cy="19" r="2" />
-        </svg>
+        <EllipsisVerticalIcon className="w-5 h-5 text-white" />
       </button>
 
       {/* Dropdown Menu */}

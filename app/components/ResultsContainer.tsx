@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { Podcast, ViewMode } from '@/types/podcast';
 import ViewToggle from './ViewToggle';
-import { EllipsisVertical, Play } from 'lucide-react';
+import { EllipsisVertical, Play, SearchIcon } from 'lucide-react';
 
 interface ResultsContainerProps {
   podcasts: Podcast[];
@@ -36,10 +36,10 @@ export default function ResultsContainer({
   const locale = useLocale();
   const isRTL = locale === 'ar';
 
-  const topPodcasts = useMemo(() => podcasts.slice(0, Math.min(12, podcasts.length)), [podcasts]);
+  const topPodcasts = useMemo(() => podcasts.slice(0, Math.min(24, podcasts.length)), [podcasts]);
   const topEpisodes = useMemo(() => {
-    if (podcasts.length > 12) {
-      return podcasts.slice(12);
+    if (podcasts.length > 24) {
+      return podcasts.slice(24);
     }
     return podcasts;
   }, [podcasts]);
@@ -83,16 +83,14 @@ export default function ResultsContainer({
   // Initial state (no search yet)
   if (!hasSearched) {
     return (
-      <div className="flex items-center justify-center py-28">
-        <div className="text-center space-y-4 text-white/70" dir={isRTL ? 'rtl' : 'ltr'}>
-          <svg className="w-20 h-20 text-white/20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
-          </svg>
+      <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
+        <div className="px-3 text-center space-y-4 text-white/70">
+          <SearchIcon
+            size={60}
+            className="text-white mx-auto"
+          />
           <div>
             <p className="text-xl font-semibold text-white">{t('initialState')}</p>
-            <p className="text-sm text-white/50">
-              {t('resultsCount', { count: podcasts.length })}
-            </p>
           </div>
         </div>
       </div>
@@ -102,7 +100,7 @@ export default function ResultsContainer({
   // No results state
   if (hasSearched && podcasts.length === 0) {
     return (
-      <div className="flex items-center justify-center py-28">
+      <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <div className="text-center space-y-4 text-white/70" dir={isRTL ? 'rtl' : 'ltr'}>
           <svg className="w-20 h-20 text-white/20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 0 1 5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
@@ -128,27 +126,36 @@ export default function ResultsContainer({
     </div>
   );
 
+  const renderListview = (podcast: Podcast, index: number) => {
+    return <div
+    key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-list-${index}`}
+    className="flex gap-4 py-2 hover:bg-white/5 transition-colors"
+    dir={isRTL ? 'rtl' : 'ltr'}
+    >
+
+    <div className="rounded-xs overflow-hidden bg-white/10 w-25 h-25">
+      <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName} width={100} height={100} />
+    </div>
+
+    <div className="flex-1 min-w-0 flex flex-col justify-between">
+      <p className="text-base font-semibold text-white line-clamp-2">{podcast.trackName}</p>
+      <p className="text-sm text-[#e3bd71] line-clamp-1">{podcast.artistName}</p>
+      <p className="text-sm text-white/50 line-clamp-2">{podcast.longDescription}</p>
+      <p className="flex text-xs text-white/50">{formatReleaseDate(podcast.releaseDate, locale)}</p>
+    </div>
+    <button className="px-4 flex flex-col gap-5 items-center justify-center">
+      <Play size={16}  className="text-white/50 hover:text-white cursor-pointer" />
+      <EllipsisVertical size={16} className="text-white/50 hover:text-white cursor-pointer" />
+    </button>
+  </div>
+  }
+
   const renderTopPodcasts = () => {
     if (topPodcastsView === 'list') {
       return (
-        <div className="space-y-3">
+        <div className=" divide-y divide-white/5">
           {topPodcasts.map((podcast, index) => (
-            <div
-              key={`${podcast.trackId ?? podcast.collectionName ?? 'podcast'}-${index}`}
-              className="flex items-center gap-4 bg-white/5 rounded-2xl border border-white/5 px-4 py-3 hover:bg-white/10 transition-colors"
-              dir={isRTL ? 'rtl' : 'ltr'}
-            >
-              <div className="relative h-16 w-16 rounded-2xl overflow-hidden bg-white/10 flex-shrink-0">
-                <PodcastArtwork src={getArtworkUrl(podcast)} alt={podcast.trackName} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-white/50 line-clamp-1">{podcast.artistName}</p>
-                <p className="text-lg font-semibold text-white line-clamp-1">{podcast.trackName}</p>
-              </div>
-              {podcast.primaryGenreName && (
-                <span className="text-xs uppercase tracking-widest text-white/40">{podcast.primaryGenreName}</span>
-              )}
-            </div>
+            renderListview(podcast, index)
           ))}
         </div>
       );
@@ -168,7 +175,6 @@ export default function ResultsContainer({
           <div
             key={`${podcast.trackId ?? podcast.collectionName ?? 'podcast'}-scroll-${index}`}
             className="w-60 flex-shrink-0"
-            style={{ scrollSnapAlign: 'start' }}
           >
             {renderCard(podcast)}
           </div>
@@ -212,27 +218,7 @@ export default function ResultsContainer({
       return (
         <div className=" divide-y divide-white/5">
           {topEpisodes.map((podcast, index) => (
-            <div
-              key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-list-${index}`}
-              className="flex gap-4 py-2 hover:bg-white/5 transition-colors"
-              dir={isRTL ? 'rtl' : 'ltr'}
-            >
-
-              <div className="rounded-xs overflow-hidden bg-white/10 w-25 h-25">
-                <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName} width={100} height={100} />
-              </div>
-
-              <div className="flex-1 min-w-0 flex flex-col justify-between">
-                <p className="text-base font-semibold text-white line-clamp-2">{podcast.trackName}</p>
-                <p className="text-sm text-[#e3bd71] line-clamp-1">{podcast.artistName}</p>
-                <p className="text-sm text-white/50 line-clamp-2">{podcast.longDescription}</p>
-                <p className="flex text-xs text-white/50">{formatReleaseDate(podcast.releaseDate, locale)}</p>
-              </div>
-              <button className="px-4 flex flex-col gap-5 items-center justify-center">
-                <Play size={16}  className="text-white/50 hover:text-white cursor-pointer" />
-                <EllipsisVertical size={16} className="text-white/50 hover:text-white cursor-pointer" />
-              </button>
-            </div>
+            renderListview(podcast, index)
           ))}
         </div>
       );
@@ -252,7 +238,6 @@ export default function ResultsContainer({
           <div
             key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-scroll-${index}`}
             className="flex-shrink-0"
-            style={{ scrollSnapAlign: 'start' }}
           >
             {renderEpisodeTile(podcast, index)}
           </div>
@@ -266,7 +251,7 @@ export default function ResultsContainer({
       <section className="space-y-4">
         <div className="flex flex-col gap-3" dir={isRTL ? 'rtl' : 'ltr'}>
           <p className="text-xs uppercase tracking-[0.4em] text-white/30">{t('resultsCount', { count: podcasts.length })}</p>
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+          <div className="flex flex-row justify-between gap-3">
             <div>
               <h2 className="text-2xl font-semibold text-white">{headingFor('podcasts')}</h2>
               <span className="text-sm text-white/50">
@@ -280,7 +265,7 @@ export default function ResultsContainer({
       </section>
 
       <section className="space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="flex flex-row justify-between gap-3">
           <div>
             <h2 className="text-2xl font-semibold text-white">{headingFor('episodes')}</h2>
             <span className="text-sm text-white/50">{t('freshEpisodes')}</span>
@@ -311,7 +296,6 @@ function formatReleaseDate(value: string | undefined, locale: string) {
     return '';
   }
 }
-
 function formatShortDate(value: string | undefined, locale: string) {
   if (!value) return '';
   try {
@@ -340,4 +324,5 @@ function PodcastArtwork({ src, alt }: { src: string; alt?: string }) {
     />
   );
 }
+
 

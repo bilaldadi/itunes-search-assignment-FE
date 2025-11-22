@@ -1,6 +1,8 @@
 'use client';
 
+import { ArrowLeftIcon, ArrowRightIcon, MoreVertical } from 'lucide-react';
 import { ReactNode } from 'react';
+import Image from 'next/image';
 
 interface HeaderProps {
   currentLocale: 'en' | 'ar';
@@ -14,38 +16,55 @@ export default function Header({
   children,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/5 bg-[#0d1424]/90 backdrop-blur">
-      <div className="px-6 py-4 flex items-center gap-4 text-white">
+    <header className="sticky top-0 z-40 bg-[#151726]">
+      {/* Mobile Layout */}
+      <div className="md:hidden px-3 py-5 flex items-center justify-between gap-3 text-white">
+        <Image
+          src="/logo.svg"
+          alt="Logo"
+          width={40}
+          height={43}
+          className="flex-shrink-0"
+        />
+        
+        <div className="flex-1">{children}</div>
+
+        <button
+          onClick={() => onLanguageChange(currentLocale === 'en' ? 'ar' : 'en')}
+          className="h-8 w-8 rounded-full border border-white/10 text-xs font-semibold uppercase tracking-wide text-white/80 hover:bg-white/10 transition flex-shrink-0"
+        >
+          {currentLocale === 'en' ? 'AR' : 'EN'}
+        </button>
+
+        <button className="flex items-center justify-center text-white/60 hover:text-white transition flex-shrink-0">
+          <MoreVertical />
+        </button>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden md:flex px-2 py-2 items-center gap-4 text-white">
         <div className="flex items-center gap-2 text-white/60">
-          <button
-            className="h-10 w-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-center"
-            aria-label="Navigate back"
-          >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 5l-7 7 7 7" />
-            </svg>
-          </button>
-          <button
-            className="h-10 w-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-center"
-            aria-label="Navigate forward"
-          >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.8}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="m9 5 7 7-7 7" />
-            </svg>
-          </button>
+           {currentLocale === 'ar' ? (
+             <>
+               <ArrowRightIcon className="w-5 h-5 text-white/60" />
+               <ArrowLeftIcon className="w-5 h-5 text-white/60" />
+             </>
+           ) : (
+             <>
+               <ArrowLeftIcon className="w-5 h-5 text-white/60" />
+               <ArrowRightIcon className="w-5 h-5 text-white/60" />
+             </>
+           )}
         </div>
 
         <div className="flex-1">{children}</div>
 
         <div className="flex items-center gap-3">
-          <button className="px-4 py-2 text-sm text-white/70 hover:text-white transition-colors">Log in</button>
-          <button className="px-4 py-2 text-sm font-semibold rounded-full bg-white text-[#0d1424] hover:opacity-90 transition">
-            Sign up
-          </button>
+          <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">Log in</button>
+          <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">Sign up</button>
           <button
             onClick={() => onLanguageChange(currentLocale === 'en' ? 'ar' : 'en')}
             className="h-10 w-10 rounded-full border border-white/10 text-xs font-semibold uppercase tracking-wide text-white/80 hover:bg-white/10 transition"
-            aria-label={currentLocale === 'en' ? 'Switch to Arabic' : 'Switch to English'}
           >
             {currentLocale === 'en' ? 'AR' : 'EN'}
           </button>
