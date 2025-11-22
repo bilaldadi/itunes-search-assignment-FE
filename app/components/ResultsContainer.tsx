@@ -19,7 +19,6 @@ interface ResultsContainerProps {
   searchTerm: string;
 }
 
-const FALLBACK_ARTWORK = '/window.svg';
 
 export default function ResultsContainer({
   podcasts,
@@ -280,7 +279,7 @@ export default function ResultsContainer({
 }
 
 function getArtworkUrl(podcast: Podcast) {
-  return podcast.artworkUrl600 || podcast.artworkUrl100 || podcast.artworkUrl60 || FALLBACK_ARTWORK;
+  return podcast.artworkUrl600 || podcast.artworkUrl100 || podcast.artworkUrl60 || '/logo.svg';
 }
 
 function formatReleaseDate(value: string | undefined, locale: string) {
