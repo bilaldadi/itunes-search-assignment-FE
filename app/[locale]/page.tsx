@@ -62,7 +62,7 @@ export default function Home() {
             currentLocale={locale as 'en' | 'ar'}
             onLanguageChange={handleLanguageChange}
           >
-            <SearchBar onSearch={handleSearch} isLoading={isLoading} variant="condensed" />
+            <SearchBar onSearch={handleSearch} />
           </Header>
 
           <main className="flex-1 overflow-y-auto">
