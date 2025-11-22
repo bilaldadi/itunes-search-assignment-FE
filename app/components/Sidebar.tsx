@@ -110,7 +110,7 @@ export default function Sidebar({ currentLocale, onLanguageChange }: SidebarProp
         </div>
 
         <div className="space-y-1">
-          <p className="px-2 text-xs uppercase tracking-[0.3em] text-white/30">Your Stuff</p>
+          <p className="px-2 text-xs uppercase tracking-[0.3em] text-white/30">{t('yourStuff')}</p>
           {libraryNavigation.map((item) => (
             <button
               key={item.label}
@@ -123,8 +123,12 @@ export default function Sidebar({ currentLocale, onLanguageChange }: SidebarProp
         </div>
       </nav>
 
-      <div className="p-6 space-y-4 text-sm text-white/60 border-t border-white/5">
+      <div className="p-4 space-y-1 text-sm text-white/60">
         <p className="text-xs text-white/30">{t('version')} · {t('fancySoups')}</p>
+        <div className="flex flex-row gap-4">
+          <a className="text-xs text-white/30 border-b border-transparent hover:border-white/30 cursor-pointer">{t('about')}</a>
+          <a className="text-xs text-white/30 border-b border-transparent hover:border-white/30 cursor-pointer">{t('allPodcasts')}</a>
+        </div>
       </div>
     </aside>
   );

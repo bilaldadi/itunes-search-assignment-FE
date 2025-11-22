@@ -14,10 +14,19 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
   const t = useTranslations('layout');
   const locale = useLocale();
   const [isOpen, setIsOpen] = useState(false);
-
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
 
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleViewChange = (view: ViewMode) => {
     onViewChange(view);
@@ -31,11 +40,11 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
   ];
 
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       {/* 3-dot Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="h-10 w-10  text-white rounded-full hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center cursor-pointer"
+        className="h-10 w-10 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors flex items-center justify-center"
         aria-label="View options"
         aria-expanded={isOpen}
       >
@@ -44,16 +53,19 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#11182b] border border-white/10 py-1 z-50 shadow-xl">
-          {viewOptions.map((option) => (
+        <div className={`absolute ${locale === 'ar' ? 'left-0' : 'right-0'} mt-2 w-45 rounded-xl bg-gradient-to-bl from-[#404080] to-[#6B4080] z-50 shadow-xl`}>
+          {/* Arrow pointing up */}
+          {/* <div className={`absolute -top-1.5 ${locale === 'ar' ? 'left-3.5' : 'right-3.5'} w-3 h-3 bg-[#404080] rotate-45`}></div>
+           */}
+          {viewOptions.map((option, index) => (
             <button
               key={option.value}
               onClick={() => handleViewChange(option.value)}
-              className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+              className={`w-full text-center p-2 text-sm transition-colors relative ${
                 currentView === option.value
-                  ? 'bg-white/10 text-white'
-                  : 'text-white/70 hover:bg-white/5'
-              }`}
+                  ? 'bg-white/20 text-white rounded-lg'
+                  : 'text-white/90 hover:text-white rounded-lg'
+              } ${index < viewOptions.length - 1 ? '' : ''}`}
               dir={locale === 'ar' ? 'rtl' : 'ltr'}
             >
               {t(option.labelKey)}

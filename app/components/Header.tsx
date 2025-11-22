@@ -3,6 +3,7 @@
 import { ArrowLeftIcon, ArrowRightIcon, MoreVertical } from 'lucide-react';
 import { ReactNode } from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 interface HeaderProps {
   currentLocale: 'en' | 'ar';
@@ -15,6 +16,8 @@ export default function Header({
   onLanguageChange,
   children,
 }: HeaderProps) {
+  const t = useTranslations('header');
+  
   return (
     <header className="sticky top-0 z-40 bg-[#151726]">
       {/* Mobile Layout */}
@@ -60,8 +63,8 @@ export default function Header({
         <div className="flex-1">{children}</div>
 
         <div className="flex items-center gap-3">
-          <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">Log in</button>
-          <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">Sign up</button>
+          <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">{t('login')}</button>
+          <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">{t('signup')}</button>
           <button
             onClick={() => onLanguageChange(currentLocale === 'en' ? 'ar' : 'en')}
             className="h-10 w-10 rounded-full border border-white/10 text-xs font-semibold uppercase tracking-wide text-white/80 hover:bg-white/10 transition"

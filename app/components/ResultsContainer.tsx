@@ -114,14 +114,14 @@ export default function ResultsContainer({
   const renderCard = (podcast: Podcast) => (
     <div
       key={podcast.trackId}
-      className="bg-white/5 border border-white/5 rounded-3xl p-4 h-full flex flex-col hover:border-white/20 transition-colors"
+      className="rounded-md flex flex-col hover:border-white/20 transition-colors"
     >
-      <div className="relative aspect-square rounded-2xl overflow-hidden bg-white/5">
-        <PodcastArtwork src={getArtworkUrl(podcast)} alt={podcast.trackName} />
+      <div className=" rounded-md w-56 aspect-square overflow-hidden bg-white/5">
+        <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={600} height={600} />
       </div>
       <div className="mt-4 space-y-1" dir={isRTL ? 'rtl' : 'ltr'}>
-        <p className="text-sm text-white/50 line-clamp-1">{podcast.artistName}</p>
-        <p className="text-base font-semibold text-white line-clamp-2">{podcast.trackName}</p>
+        <p className="text-sm text-white truncate max-w-56">{podcast.trackName}</p>
+        <p className="text-xs text-[#e3bd71] truncate max-w-56">{podcast.artistName}</p>
       </div>
     </div>
   );
@@ -134,7 +134,7 @@ export default function ResultsContainer({
     >
 
     <div className="rounded-xs overflow-hidden bg-white/10 w-25 h-25">
-      <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName} width={100} height={100} />
+      <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={100} height={100} />
     </div>
 
     <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -163,18 +163,18 @@ export default function ResultsContainer({
 
     if (topPodcastsView === 'grid') {
       return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(224px,1fr))] place-items-center">
           {topPodcasts.map((podcast) => renderCard(podcast))}
         </div>
       );
     }
 
     return (
-      <div className="flex gap-4 overflow-x-auto pb-4 custom-scroll" dir={isRTL ? 'rtl' : 'ltr'} style={{ scrollSnapType: 'x proximity' }}>
+      <div className="flex gap-4 overflow-x-auto pb-4 custom-scroll" dir={isRTL ? 'rtl' : 'ltr'}>
         {topPodcasts.map((podcast, index) => (
           <div
             key={`${podcast.trackId ?? podcast.collectionName ?? 'podcast'}-scroll-${index}`}
-            className="w-60 flex-shrink-0"
+            className="flex-shrink-0"
           >
             {renderCard(podcast)}
           </div>
@@ -193,7 +193,7 @@ export default function ResultsContainer({
       >
         <div className="flex items-start bg-gradient-to-r from-[#211627] to-[#1a1a26] rounded-md">
           <div className="w-30 h-30">
-           <Image className="rounded-md w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName} width={100} height={100} />
+           <Image className="rounded-md w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={100} height={100} />
           </div>
 
           <div className="flex-1 min-w-0 p-3">
@@ -226,7 +226,7 @@ export default function ResultsContainer({
 
     if (topEpisodesView === 'grid') {
       return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 place-items-center">
           {topEpisodes.map((podcast, index) => renderEpisodeTile(podcast, index))}
         </div>
       );
@@ -295,34 +295,6 @@ function formatReleaseDate(value: string | undefined, locale: string) {
   } catch {
     return '';
   }
-}
-function formatShortDate(value: string | undefined, locale: string) {
-  if (!value) return '';
-  try {
-    const date = new Date(value);
-    return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
-      month: 'short',
-      day: 'numeric',
-    }).format(date);
-  } catch {
-    return '';
-  }
-}
-
-
-function PodcastArtwork({ src, alt }: { src: string; alt?: string }) {
-  const [hasError, setHasError] = useState(false);
-
-  return (
-    <Image
-      src={src}
-      alt={alt || 'Podcast artwork'}
-      fill
-      className="object-cover"
-      sizes="(max-width: 768px) 40vw, 200px"
-      onError={() => setHasError(true)}
-    />
-  );
 }
 
 

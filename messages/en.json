@@ -37,8 +37,15 @@
     "recents": "Recents",
     "appTitle": "Podcast Search",
     "language": "Language",
-    "version": "Podbay v2.9.6",
-    "fancySoups": "Fancy Soups"
+    "version": "Bilal v2.9.6 by",
+    "fancySoups": "Fancy Bilal.",
+    "yourStuff": "Your Stuff",
+    "about": "About",
+    "allPodcasts": "All Podcasts"
+  },
+  "header": {
+    "login": "Log in",
+    "signup": "Sign up"
   }
 }
 

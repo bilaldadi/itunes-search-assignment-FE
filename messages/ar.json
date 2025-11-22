@@ -37,8 +37,15 @@
     "recents": "الأحدث",
     "appTitle": "بحث البودكاست",
     "language": "اللغة",
-    "version": "بودباي v2.9.6",
-    "fancySoups": "Fancy Soups"
+    "version": "بلال v2.9.6",
+    "fancySoups": "فانسي بلال",
+    "yourStuff": "المواد الخاصة بك",
+    "about": "عن التطبيق",
+    "allPodcasts": "جميع البودكاستات"
+  },
+  "header": {
+    "login": "الدخول",
+    "signup": "تسجيل"
   }
 }
 
