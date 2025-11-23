@@ -4,11 +4,6 @@ import Image from 'next/image';
 import { ReactNode, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 
-interface SidebarProps {
-  currentLocale: 'en' | 'ar';
-  onLanguageChange: (lang: 'en' | 'ar') => void;
-}
-
 interface NavItem {
   label: string;
   icon: ReactNode;
@@ -16,7 +11,7 @@ interface NavItem {
 
 const baseButtonClasses = 'flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors';
 
-export default function Sidebar({ currentLocale, onLanguageChange }: SidebarProps) {
+export default function Sidebar() {
   const t = useTranslations('sidebar');
   const mainNavigation: NavItem[] = useMemo(
     () => [

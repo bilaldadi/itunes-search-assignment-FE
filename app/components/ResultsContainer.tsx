@@ -1,8 +1,5 @@
-'use client';
-
-import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useLocale, useTranslations } from 'next-intl';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Podcast, ViewMode } from '@/types/podcast';
 import ViewToggle from './ViewToggle';
 import { EllipsisVertical, Play, SearchIcon } from 'lucide-react';
@@ -10,38 +7,25 @@ import { EllipsisVertical, Play, SearchIcon } from 'lucide-react';
 interface ResultsContainerProps {
   podcasts: Podcast[];
   topPodcastsView: ViewMode;
-  onTopPodcastsViewChange: (view: ViewMode) => void;
   topEpisodesView: ViewMode;
-  onTopEpisodesViewChange: (view: ViewMode) => void;
-  isLoading: boolean;
   hasSearched: boolean;
   error: string | null;
   searchTerm: string;
 }
 
-
-export default function ResultsContainer({
+export default async function ResultsContainer({
   podcasts,
   topPodcastsView,
-  onTopPodcastsViewChange,
   topEpisodesView,
-  onTopEpisodesViewChange,
-  isLoading,
   hasSearched,
   error,
   searchTerm,
 }: ResultsContainerProps) {
-  const t = useTranslations('search');
-  const locale = useLocale();
+  const t = await getTranslations('search');
+  const locale = await getLocale();
   const isRTL = locale === 'ar';
-
-  const topPodcasts = useMemo(() => podcasts.slice(0, Math.min(24, podcasts.length)), [podcasts]);
-  const topEpisodes = useMemo(() => {
-    if (podcasts.length > 24) {
-      return podcasts.slice(24);
-    }
-    return podcasts;
-  }, [podcasts]);
+  const topPodcasts = getTopPodcasts(podcasts);
+  const topEpisodes = getTopEpisodes(podcasts);
 
   const headingFor = (type: 'podcasts' | 'episodes') => {
     if (!searchTerm.trim()) {
@@ -53,19 +37,6 @@ export default function ResultsContainer({
       : t('topEpisodesFor', { term: searchTerm });
   };
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-28">
-        <div className="text-center space-y-4 text-white/70">
-          <div className="h-14 w-14 mx-auto rounded-full border-4 border-white/20 border-t-[#7d5bff] animate-spin" />
-          <p>{t('loading')}</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
   if (error) {
     return (
       <div className="flex items-center justify-center py-28">
@@ -79,15 +50,11 @@ export default function ResultsContainer({
     );
   }
 
-  // Initial state (no search yet)
   if (!hasSearched) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <div className="px-3 text-center space-y-4 text-white/70">
-          <SearchIcon
-            size={60}
-            className="text-white mx-auto"
-          />
+          <SearchIcon size={60} className="text-white mx-auto" />
           <div>
             <p className="text-xl font-semibold text-white">{t('initialState')}</p>
           </div>
@@ -96,8 +63,7 @@ export default function ResultsContainer({
     );
   }
 
-  // No results state
-  if (hasSearched && podcasts.length === 0) {
+  if (podcasts.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <div className="text-center space-y-4 text-white/70" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -115,8 +81,8 @@ export default function ResultsContainer({
       key={podcast.trackId}
       className="rounded-md flex flex-col hover:border-white/20 transition-colors"
     >
-      <div className=" rounded-md w-56 aspect-square overflow-hidden bg-white/5">
-        <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={600} height={600} />
+      <div className="rounded-md w-56 aspect-square overflow-hidden bg-white/5">
+        <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName || 'podcast artwork'} width={600} height={600} />
       </div>
       <div className="mt-4 space-y-1" dir={isRTL ? 'rtl' : 'ltr'}>
         <p className="text-sm text-white truncate max-w-56">{podcast.trackName}</p>
@@ -125,37 +91,34 @@ export default function ResultsContainer({
     </div>
   );
 
-  const renderListview = (podcast: Podcast, index: number) => {
-    return <div
-    key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-list-${index}`}
-    className="flex gap-4 py-2 hover:bg-white/5 transition-colors"
-    dir={isRTL ? 'rtl' : 'ltr'}
+  const renderListview = (podcast: Podcast, index: number) => (
+    <div
+      key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-list-${index}`}
+      className="flex gap-4 py-2 hover:bg-white/5 transition-colors"
+      dir={isRTL ? 'rtl' : 'ltr'}
     >
+      <div className="rounded-xs overflow-hidden bg-white/10 w-25 h-25">
+        <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName || 'podcast artwork'} width={100} height={100} />
+      </div>
 
-    <div className="rounded-xs overflow-hidden bg-white/10 w-25 h-25">
-      <Image className="w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={100} height={100} />
+      <div className="flex-1 min-w-0 flex flex-col justify-between">
+        <p className="text-base font-semibold text-white line-clamp-2">{podcast.trackName}</p>
+        <p className="text-sm text-[#e3bd71] line-clamp-1">{podcast.artistName}</p>
+        <p className="text-sm text-white/50 line-clamp-2">{podcast.longDescription}</p>
+        <p className="flex text-xs text-white/50">{formatReleaseDate(podcast.releaseDate, locale)}</p>
+      </div>
+      <button className="px-4 flex flex-col gap-5 items-center justify-center">
+        <Play size={16} className="text-white/50 hover:text-white cursor-pointer" />
+        <EllipsisVertical size={16} className="text-white/50 hover:text-white cursor-pointer" />
+      </button>
     </div>
-
-    <div className="flex-1 min-w-0 flex flex-col justify-between">
-      <p className="text-base font-semibold text-white line-clamp-2">{podcast.trackName}</p>
-      <p className="text-sm text-[#e3bd71] line-clamp-1">{podcast.artistName}</p>
-      <p className="text-sm text-white/50 line-clamp-2">{podcast.longDescription}</p>
-      <p className="flex text-xs text-white/50">{formatReleaseDate(podcast.releaseDate, locale)}</p>
-    </div>
-    <button className="px-4 flex flex-col gap-5 items-center justify-center">
-      <Play size={16}  className="text-white/50 hover:text-white cursor-pointer" />
-      <EllipsisVertical size={16} className="text-white/50 hover:text-white cursor-pointer" />
-    </button>
-  </div>
-  }
+  );
 
   const renderTopPodcasts = () => {
     if (topPodcastsView === 'list') {
       return (
-        <div className=" divide-y divide-white/5">
-          {topPodcasts.map((podcast, index) => (
-            renderListview(podcast, index)
-          ))}
+        <div className="divide-y divide-white/5">
+          {topPodcasts.map((podcast, index) => renderListview(podcast, index))}
         </div>
       );
     }
@@ -182,43 +145,38 @@ export default function ResultsContainer({
     );
   };
 
-  const renderEpisodeTile = (podcast: Podcast, index: number) => {
+  const renderEpisodeTile = (podcast: Podcast, index: number) => (
+    <div
+      key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-tile-${index}`}
+      className="w-full bg-white/5 border border-white/5 flex flex-col rounded-md hover:border-white/10 transition-colors"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
+      <div className="flex items-start bg-gradient-to-r from-[#211627] to-[#1a1a26] rounded-md">
+        <div className="w-30 h-30 flex-shrink-0">
+          <Image className="rounded-md w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName || 'podcast artwork'} width={600} height={600} />
+        </div>
 
-    return (
-      <div
-        key={`${podcast.trackId ?? podcast.collectionName ?? 'episode'}-tile-${index}`}
-        className="w-full bg-white/5 border border-white/5 flex flex-col rounded-md hover:border-white/10 transition-colors"
-        dir={isRTL ? 'rtl' : 'ltr'}
-      >
-        <div className="flex items-start bg-gradient-to-r from-[#211627] to-[#1a1a26] rounded-md">
-          <div className="w-30 h-30 flex-shrink-0">
-           <Image className="rounded-md w-full h-full" src={getArtworkUrl(podcast)} alt={podcast.trackName|| 'podcast artwork'} width={600} height={600} />
-          </div>
-
-          <div className="flex-1 min-w-0 p-3">
-            <div className="flex items-start justify-between">
-              <div className="min-w-0 space-y-4">
-                <p className="text-xs text-[#e3bd71] truncate">{podcast.artistName}</p>
-                <p className="text-md truncate">{podcast.trackName}</p>
-                <p className="text-xs text-white/50 truncate">{formatReleaseDate(podcast.releaseDate, locale)}</p>
-              </div>
-              <div className="flex items-center justify-center">
-               <EllipsisVertical  size={20} className="text-white/50 hover:text-white cursor-pointer" />
-              </div>
+        <div className="flex-1 min-w-0 p-3">
+          <div className="flex items-start justify-between">
+            <div className="min-w-0 space-y-4">
+              <p className="text-xs text-[#e3bd71] truncate">{podcast.artistName}</p>
+              <p className="text-md truncate">{podcast.trackName}</p>
+              <p className="text-xs text-white/50 truncate">{formatReleaseDate(podcast.releaseDate, locale)}</p>
+            </div>
+            <div className="flex items-center justify-center">
+              <EllipsisVertical size={20} className="text-white/50 hover:text-white cursor-pointer" />
             </div>
           </div>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
 
   const renderTopEpisodes = () => {
     if (topEpisodesView === 'list') {
       return (
-        <div className=" divide-y divide-white/5">
-          {topEpisodes.map((podcast, index) => (
-            renderListview(podcast, index)
-          ))}
+        <div className="divide-y divide-white/5">
+          {topEpisodes.map((podcast, index) => renderListview(podcast, index))}
         </div>
       );
     }
@@ -257,7 +215,7 @@ export default function ResultsContainer({
                 {searchTerm ? t('searchTermLabel', { term: searchTerm }) : t('trendingNow')}
               </span>
             </div>
-            <ViewToggle currentView={topPodcastsView} onViewChange={onTopPodcastsViewChange} />
+            <ViewToggle currentView={topPodcastsView} paramKey="topPodcastsView" />
           </div>
         </div>
         {renderTopPodcasts()}
@@ -269,13 +227,24 @@ export default function ResultsContainer({
             <h2 className="text-2xl font-semibold text-white">{headingFor('episodes')}</h2>
             <span className="text-sm text-white/50">{t('freshEpisodes')}</span>
           </div>
-          <ViewToggle currentView={topEpisodesView} onViewChange={onTopEpisodesViewChange} />
+          <ViewToggle currentView={topEpisodesView} paramKey="topEpisodesView" />
         </div>
 
         {renderTopEpisodes()}
       </section>
     </div>
   );
+}
+
+function getTopPodcasts(podcasts: Podcast[]) {
+  return podcasts.slice(0, Math.min(24, podcasts.length));
+}
+
+function getTopEpisodes(podcasts: Podcast[]) {
+  if (podcasts.length > 24) {
+    return podcasts.slice(24);
+  }
+  return podcasts;
 }
 
 function getArtworkUrl(podcast: Podcast) {
@@ -295,5 +264,4 @@ function formatReleaseDate(value: string | undefined, locale: string) {
     return '';
   }
 }
-
 

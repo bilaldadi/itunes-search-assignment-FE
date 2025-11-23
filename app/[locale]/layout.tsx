@@ -5,6 +5,9 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { setRequestLocale } from 'next-intl/server';
 import localFont from "next/font/local";
+import Header from '@/app/components/Header';
+import SearchBar from '@/app/components/SearchBar';
+import Sidebar from '@/app/components/Sidebar';
 import '../globals.css';
 
 const ibmArabic = localFont({
@@ -46,7 +49,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
 
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
     notFound();
   }
 
@@ -61,7 +64,23 @@ export default async function LocaleLayout({
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body className={`${ibmArabic.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <div className="min-h-screen text-white">
+            <div className="flex min-h-screen">
+              <Sidebar />
+
+              <div className="flex-1 flex flex-col min-w-0">
+                <Header currentLocale={(locale as 'en' | 'ar')}>
+                  <SearchBar />
+                </Header>
+
+                <main className="flex-1 overflow-y-auto">
+                  <div className="w-full">
+                    {children}
+                  </div>
+                </main>
+              </div>
+            </div>
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>

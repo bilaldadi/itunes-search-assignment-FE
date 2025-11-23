@@ -1,22 +1,32 @@
 'use client';
 
 import { ArrowLeftIcon, ArrowRightIcon, MoreVertical } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { useRouter, usePathname } from '@/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 
 interface HeaderProps {
   currentLocale: 'en' | 'ar';
-  onLanguageChange: (lang: 'en' | 'ar') => void;
   children?: ReactNode;
 }
 
 export default function Header({
   currentLocale,
-  onLanguageChange,
   children,
 }: HeaderProps) {
   const t = useTranslations('header');
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const handleLanguageChange = useCallback(() => {
+    const nextLocale = currentLocale === 'en' ? 'ar' : 'en';
+    const queryString = searchParams.toString();
+    const href = queryString ? `${pathname}?${queryString}` : pathname;
+    router.replace(href, { locale: nextLocale });
+  }, [currentLocale, pathname, router, searchParams]);
   
   return (
     <header className="sticky top-0 z-40 bg-[#151726]">
@@ -33,7 +43,7 @@ export default function Header({
         <div className="flex-1">{children}</div>
 
         <button
-          onClick={() => onLanguageChange(currentLocale === 'en' ? 'ar' : 'en')}
+          onClick={handleLanguageChange}
           className="h-8 w-8 rounded-full border border-white/10 text-xs font-semibold uppercase tracking-wide text-white/80 hover:bg-white/10 transition flex-shrink-0"
         >
           {currentLocale === 'en' ? 'AR' : 'EN'}
@@ -66,7 +76,7 @@ export default function Header({
           <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">{t('login')}</button>
           <button className="w-15 p-1.5 text-sm  rounded-md bg-[#456C91] text-white hover:opacity-90 transition">{t('signup')}</button>
           <button
-            onClick={() => onLanguageChange(currentLocale === 'en' ? 'ar' : 'en')}
+            onClick={handleLanguageChange}
             className="h-10 w-10 rounded-full border border-white/10 text-xs font-semibold uppercase tracking-wide text-white/80 hover:bg-white/10 transition"
           >
             {currentLocale === 'en' ? 'AR' : 'EN'}

@@ -3,16 +3,21 @@
 import { useState, useEffect, useRef } from 'react';
 import { ViewMode } from '@/types/podcast';
 import { useTranslations, useLocale } from 'next-intl';
+import { useRouter, usePathname } from '@/i18n/routing';
+import { useSearchParams } from 'next/navigation';
 import { EllipsisVerticalIcon } from 'lucide-react';
 
 interface ViewToggleProps {
   currentView: ViewMode;
-  onViewChange: (view: ViewMode) => void;
+  paramKey: 'topPodcastsView' | 'topEpisodesView';
 }
 
-export default function ViewToggle({ currentView, onViewChange }: ViewToggleProps) {
+export default function ViewToggle({ currentView, paramKey }: ViewToggleProps) {
   const t = useTranslations('layout');
   const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +34,12 @@ export default function ViewToggle({ currentView, onViewChange }: ViewToggleProp
   }, []);
 
   const handleViewChange = (view: ViewMode) => {
-    onViewChange(view);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(paramKey, view);
+    const queryString = params.toString();
+    const href = queryString ? `${pathname}?${queryString}` : pathname;
+
+    router.replace(href);
     setIsOpen(false);
   };
 
