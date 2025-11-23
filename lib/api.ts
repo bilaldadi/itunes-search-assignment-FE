@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/types/podcast';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function searchPodcasts(query: string): Promise<ApiResponse> {
   if (!query.trim()) {
