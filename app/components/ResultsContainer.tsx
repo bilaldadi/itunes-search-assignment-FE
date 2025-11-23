@@ -207,7 +207,7 @@ export default async function ResultsContainer({
     <div className="px-6 py-10 space-y-12">
       <section className="space-y-4">
         <div className="flex flex-col gap-3" dir={isRTL ? 'rtl' : 'ltr'}>
-          <p className="text-xs uppercase tracking-[0.4em] text-white/30">{t('resultsCount', { count: podcasts.length })}</p>
+          <p className="text-xs uppercase text-white/30">{t('resultsCount', { count: podcasts.length })}</p>
           <div className="flex flex-row justify-between gap-3">
             <div>
               <h2 className="text-2xl font-semibold text-white">{headingFor('podcasts')}</h2>
