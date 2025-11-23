@@ -35,7 +35,7 @@ export default function SearchBar() {
   );
 
   const debouncedNavigate = useMemo(
-    () => debounce(navigateWithQuery, 300),
+    () => debounce(navigateWithQuery, 500),
     [navigateWithQuery]
   );
 
